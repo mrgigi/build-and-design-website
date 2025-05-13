@@ -308,8 +308,8 @@ export default function Home() {
                 <Image 
                   src="/logo.png" 
                   alt="Build & Design Logo" 
-                  width={150} 
-                  height={50} 
+                  width={250} 
+                  height={100} 
                   className="h-10 w-auto"
                 />
               </div>
