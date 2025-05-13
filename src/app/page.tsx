@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
@@ -9,6 +8,7 @@ interface ContactFormData {
   phone: string;
   productInterest: string[];
   estimatedQuantity: string;
+  otherProducts: string; // Added this line
 }
 interface PDFLeadFormData {
   name: string;
@@ -23,6 +23,7 @@ export default function Home() {
     phone: '',
     productInterest: [],
     estimatedQuantity: '',
+    otherProducts: '', // Added this line
   });
   // PDF lead capture state
   const [pdfLeadData, setPdfLeadData] = useState<PDFLeadFormData>({
@@ -295,7 +296,7 @@ export default function Home() {
                   <option value="Plumbing & Fixtures">Plumbing & Fixtures</option>
                   <option value="Electrical Supplies">Electrical Supplies</option>
                   <option value="Paint & Finishes">Paint & Finishes</option>
-                  <option value="Other">Other</option>
+                  {/* Removed the "Other" option */}
                 </select>
                 <p className="text-sm text-gray-500 mt-1">Hold Ctrl (or Cmd on Mac) to select multiple options</p>
               </div>
@@ -308,6 +309,18 @@ export default function Home() {
                   id="estimatedQuantity" 
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                   placeholder="e.g., 500 units, 1000 sq meters, etc."
+                />
+              </div>
+              
+              {/* Added standalone Other Products field */}
+              <div className="mt-6">
+                <label htmlFor="otherProducts" className="block text-sm font-medium text-gray-700 mb-1">Other Products (if not listed above)</label>
+                <input 
+                  type="text" 
+                  name="otherProducts" 
+                  id="otherProducts" 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                  placeholder="Enter any other products you're interested in"
                 />
               </div>
               
