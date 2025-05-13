@@ -1,16 +1,16 @@
+
 import './globals.css';
 import type { Metadata } from 'next';
-
 export const metadata: Metadata = {
   title: 'Build & Design by Gigimobile | Bulk Construction Materials – South Africa & Nigeria',
-  description: 'Build & Design (by Gigimobile) is your bulk supplier of construction materials—lights, marbles, furniture, steel & rebar, cement & aggregates, timber & lumber, windows & doors, plumbing & fixtures, electrical supplies, paint & finishes—serving developers and contractors across South Africa and Nigeria. Get a free quote today!',
-  keywords: 'bulk construction materials, wholesale lights, marble slabs, wholesale furniture, steel rebar bulk, cement aggregates wholesale, timber lumber supplier, windows doors bulk, plumbing fixtures wholesale, electrical supplies bulk, paint finishes wholesale, South Africa, Nigeria, Build & Design, Gigimobile',
+  description: 'Build & Design (by Gigimobile) is your bulk supplier of construction materials—lights, marbles, furnitures, steel & rebar, cement & aggregates, timber & lumber, windows & doors, plumbing & fixtures, electrical supplies, paint & finishes—serving developers and contractors across South Africa and Nigeria. Get a free quote today!',
+  keywords: 'bulk construction materials, wholesale lights, marble slabs, wholesale furnitures, steel rebar bulk, cement aggregates wholesale, timber lumber supplier, windows doors bulk, plumbing fixtures wholesale, electrical supplies bulk, paint finishes wholesale, South Africa, Nigeria, Build & Design, Gigimobile',
   authors: [{ name: 'Build & Design by Gigimobile' }],
   robots: 'index, follow',
   openGraph: {
     type: 'website',
     title: 'Build & Design by Gigimobile | Bulk Construction Materials',
-    description: 'Premium bulk orders of lights, marbles, furniture, steel & rebar, cement & aggregates, timber & lumber, windows & doors, plumbing & fixtures, electrical supplies & paint finishes—delivered across South Africa & Nigeria. Request your free quote now!',
+    description: 'Premium bulk orders of lights, marbles, furnitures, steel & rebar, cement & aggregates, timber & lumber, windows & doors, plumbing & fixtures, electrical supplies & paint finishes—delivered across South Africa & Nigeria. Request your free quote now!',
     url: 'https://buildanddesign.co.za',
     siteName: 'Build & Design by Gigimobile',
     images: [
@@ -23,7 +23,6 @@ export const metadata: Metadata = {
     ],
   },
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -81,3 +80,4 @@ export default function RootLayout({
     </html>
   );
 }
+    
