@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
@@ -7,8 +8,8 @@ interface ContactFormData {
   email: string;
   phone: string;
   productInterest: string[];
+  otherProducts: string;
   estimatedQuantity: string;
-  otherProducts: string; // Added this line
 }
 interface PDFLeadFormData {
   name: string;
@@ -22,8 +23,8 @@ export default function Home() {
     email: '',
     phone: '',
     productInterest: [],
+    otherProducts: '',
     estimatedQuantity: '',
-    otherProducts: '', // Added this line
   });
   // PDF lead capture state
   const [pdfLeadData, setPdfLeadData] = useState<PDFLeadFormData>({
@@ -296,9 +297,19 @@ export default function Home() {
                   <option value="Plumbing & Fixtures">Plumbing & Fixtures</option>
                   <option value="Electrical Supplies">Electrical Supplies</option>
                   <option value="Paint & Finishes">Paint & Finishes</option>
-                  {/* Removed the "Other" option */}
                 </select>
                 <p className="text-sm text-gray-500 mt-1">Hold Ctrl (or Cmd on Mac) to select multiple options</p>
+              </div>
+              
+              <div className="mt-6">
+                <label htmlFor="otherProducts" className="block text-sm font-medium text-gray-700 mb-1">Other Products (if not listed above)</label>
+                <input 
+                  type="text" 
+                  name="otherProducts" 
+                  id="otherProducts" 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                  placeholder="Please specify any other products you're interested in"
+                />
               </div>
               
               <div className="mt-6">
@@ -309,18 +320,6 @@ export default function Home() {
                   id="estimatedQuantity" 
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                   placeholder="e.g., 500 units, 1000 sq meters, etc."
-                />
-              </div>
-              
-              {/* Added standalone Other Products field */}
-              <div className="mt-6">
-                <label htmlFor="otherProducts" className="block text-sm font-medium text-gray-700 mb-1">Other Products (if not listed above)</label>
-                <input 
-                  type="text" 
-                  name="otherProducts" 
-                  id="otherProducts" 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
-                  placeholder="Enter any other products you're interested in"
                 />
               </div>
               
@@ -547,8 +546,9 @@ export default function Home() {
                 <h4 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h4>
                 <p className="text-gray-600 mb-4">Your download is ready.</p>
                 <a 
-                  href="/catalogues/lights.pdf" 
-                  download
+                  href="https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign//Lights%20by%20Build%20&%20Design%20.pdf" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-block bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
                 >
                   Download Now
@@ -616,8 +616,9 @@ export default function Home() {
                 <h4 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h4>
                 <p className="text-gray-600 mb-4">Your download is ready.</p>
                 <a 
-                  href="/catalogues/marbles.pdf" 
-                  download
+                  href="https://drive.google.com/file/d/1G2K44wY5VLM6vVPYXOord726phNqkSLZ/view?usp=sharing" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-block bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
                 >
                   Download Now
@@ -685,8 +686,9 @@ export default function Home() {
                 <h4 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h4>
                 <p className="text-gray-600 mb-4">Your download is ready.</p>
                 <a 
-                  href="/catalogues/furnitures.pdf" 
-                  download
+                  href="https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign//Furnitures%20By%20Build%20&%20Design.pdf" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-block bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
                 >
                   Download Now
