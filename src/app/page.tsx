@@ -68,12 +68,12 @@ export default function Home() {
     setShowFurnituresModal(false);
     setPdfFormSubmitted(false);
   };
-  const handlePdfLeadSubmit = (e: React.FormEvent, pdfType: string) => {
-    e.preventDefault();
-    // In a real implementation, you would submit this to your server or Formspree
-    console.log(`PDF Lead for ${pdfType}:`, pdfLeadData);
+  
+  // This function is now only used for direct downloads without form submission
+  const showDirectDownload = (pdfType: string) => {
     setPdfFormSubmitted(true);
   };
+  
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed header with higher z-index */}
@@ -518,7 +518,8 @@ export default function Home() {
             </div>
             
             {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xnndooby" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'lights')}>
+              <form action="https://formspree.io/f/xnndooby" method="POST">
+                <input type="hidden" name="_next" value="https://buildanddesign.co.za?pdf=lights" />
                 <input type="hidden" name="catalogue" value="Lights Catalogue" />
                 
                 <div className="mb-4">
@@ -588,7 +589,8 @@ export default function Home() {
             </div>
             
             {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xnndooby" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'marbles')}>
+              <form action="https://formspree.io/f/xnndooby" method="POST">
+                <input type="hidden" name="_next" value="https://buildanddesign.co.za?pdf=marbles" />
                 <input type="hidden" name="catalogue" value="Marbles Catalogue" />
                 
                 <div className="mb-4">
@@ -658,7 +660,8 @@ export default function Home() {
             </div>
             
             {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xnndooby" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'furnitures')}>
+              <form action="https://formspree.io/f/xnndooby" method="POST">
+                <input type="hidden" name="_next" value="https://buildanddesign.co.za?pdf=furnitures" />
                 <input type="hidden" name="catalogue" value="Furnitures Catalogue" />
                 
                 <div className="mb-4">
