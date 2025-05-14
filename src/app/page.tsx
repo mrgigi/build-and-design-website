@@ -10,10 +10,7 @@ interface ContactFormData {
   otherProducts: string;
   estimatedQuantity: string;
 }
-interface PDFLeadFormData {
-  name: string;
-  email: string;
-}
+
 export default function Home() {
   // Contact form state
   const [formData, setFormData] = useState<ContactFormData>({
@@ -25,16 +22,7 @@ export default function Home() {
     otherProducts: '',
     estimatedQuantity: '',
   });
-  // PDF lead capture state
-  const [pdfLeadData, setPdfLeadData] = useState<PDFLeadFormData>({
-    name: '',
-    email: '',
-  });
-  const [showLightsModal, setShowLightsModal] = useState(false);
-  const [showMarblesModal, setShowMarblesModal] = useState(false);
-  const [showFurnituresModal, setShowFurnituresModal] = useState(false);
-  const [pdfFormSubmitted, setPdfFormSubmitted] = useState(false);
-  const [currentPdf, setCurrentPdf] = useState('');
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
@@ -44,34 +32,6 @@ export default function Home() {
     } else {
       setFormData({ ...formData, [name]: value });
     }
-  };
-  const handlePdfLeadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setPdfLeadData({ ...pdfLeadData, [name]: value });
-  };
-  const openPdfModal = (pdfType: string) => {
-    setPdfFormSubmitted(false);
-    setPdfLeadData({ name: '', email: '' });
-    setCurrentPdf(pdfType);
-    
-    if (pdfType === 'lights') {
-      setShowLightsModal(true);
-    } else if (pdfType === 'marbles') {
-      setShowMarblesModal(true);
-    } else if (pdfType === 'furnitures') {
-      setShowFurnituresModal(true);
-    }
-  };
-  const closePdfModal = () => {
-    setShowLightsModal(false);
-    setShowMarblesModal(false);
-    setShowFurnituresModal(false);
-    setPdfFormSubmitted(false);
-  };
-  
-  // This function is now only used for direct downloads without form submission
-  const showDirectDownload = (pdfType: string) => {
-    setPdfFormSubmitted(true);
   };
   
   return (
@@ -138,12 +98,14 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2 text-black">Lights</h3>
                 <p className="text-gray-600 mb-4">Premium lighting solutions for all construction needs</p>
-                <button 
-                  onClick={() => openPdfModal('lights')}
+                <a 
+                  href="https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign//Lights%20by%20Build%20&%20Design%20.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black inline-block"
                 >
                   View PDF catalogue
-                </button>
+                </a>
               </div>
             </div>
             
@@ -158,12 +120,14 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2 text-black">Marbles</h3>
                 <p className="text-gray-600 mb-4">High-quality marble for elegant finishes</p>
-                <button 
-                  onClick={() => openPdfModal('marbles')}
+                <a 
+                  href="https://drive.google.com/file/d/1G2K44wY5VLM6vVPYXOord726phNqkSLZ/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black inline-block"
                 >
                   View PDF catalogue
-                </button>
+                </a>
               </div>
             </div>
             
@@ -178,12 +142,14 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2 text-black">Furnitures</h3>
                 <p className="text-gray-600 mb-4">Durable and stylish furnitures for all spaces</p>
-                <button 
-                  onClick={() => openPdfModal('furnitures')}
+                <a 
+                  href="https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign//Furnitures%20By%20Build%20&%20Design.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black inline-block"
                 >
                   View PDF catalogue
-                </button>
+                </a>
               </div>
             </div>
             
@@ -502,221 +468,6 @@ export default function Home() {
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
         </svg>
       </a>
-      
-      {/* PDF Lead Capture Modals */}
-      {/* Lights PDF Modal */}
-      {showLightsModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-black">Download Lights Catalogue</h3>
-              <button onClick={closePdfModal} className="text-gray-500 hover:text-gray-700">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </button>
-            </div>
-            
-            {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xnndooby" method="POST">
-                <input type="hidden" name="_next" value="https://buildanddesign.co.za?pdf=lights" />
-                <input type="hidden" name="catalogue" value="Lights Catalogue" />
-                
-                <div className="mb-4">
-                  <label htmlFor="pdf-name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                  <input 
-                    type="text" 
-                    name="name" 
-                    id="pdf-name" 
-                    value={pdfLeadData.name}
-                    onChange={handlePdfLeadChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
-                    required 
-                  />
-                </div>
-                
-                <div className="mb-6">
-                  <label htmlFor="pdf-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    id="pdf-email" 
-                    value={pdfLeadData.email}
-                    onChange={handlePdfLeadChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
-                    required 
-                  />
-                </div>
-                
-                <button 
-                  type="submit" 
-                  className="w-full bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
-                >
-                  Download Catalogue
-                </button>
-              </form>
-            ) : (
-              <div className="text-center">
-                <svg className="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <h4 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h4>
-                <p className="text-gray-600 mb-4">Your download is ready.</p>
-                <a 
-                  href="https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign//Lights%20by%20Build%20&%20Design%20.pdf" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
-                >
-                  Download Now
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      {/* Marbles PDF Modal */}
-      {showMarblesModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-black">Download Marbles Catalogue</h3>
-              <button onClick={closePdfModal} className="text-gray-500 hover:text-gray-700">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </button>
-            </div>
-            
-            {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xnndooby" method="POST">
-                <input type="hidden" name="_next" value="https://buildanddesign.co.za?pdf=marbles" />
-                <input type="hidden" name="catalogue" value="Marbles Catalogue" />
-                
-                <div className="mb-4">
-                  <label htmlFor="pdf-name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                  <input 
-                    type="text" 
-                    name="name" 
-                    id="pdf-name" 
-                    value={pdfLeadData.name}
-                    onChange={handlePdfLeadChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
-                    required 
-                  />
-                </div>
-                
-                <div className="mb-6">
-                  <label htmlFor="pdf-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    id="pdf-email" 
-                    value={pdfLeadData.email}
-                    onChange={handlePdfLeadChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
-                    required 
-                  />
-                </div>
-                
-                <button 
-                  type="submit" 
-                  className="w-full bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
-                >
-                  Download Catalogue
-                </button>
-              </form>
-            ) : (
-              <div className="text-center">
-                <svg className="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <h4 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h4>
-                <p className="text-gray-600 mb-4">Your download is ready.</p>
-                <a 
-                  href="https://drive.google.com/file/d/1G2K44wY5VLM6vVPYXOord726phNqkSLZ/view?usp=sharing" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
-                >
-                  Download Now
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      {/* Furnitures PDF Modal */}
-      {showFurnituresModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-black">Download Furnitures Catalogue</h3>
-              <button onClick={closePdfModal} className="text-gray-500 hover:text-gray-700">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </button>
-            </div>
-            
-            {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xnndooby" method="POST">
-                <input type="hidden" name="_next" value="https://buildanddesign.co.za?pdf=furnitures" />
-                <input type="hidden" name="catalogue" value="Furnitures Catalogue" />
-                
-                <div className="mb-4">
-                  <label htmlFor="pdf-name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                  <input 
-                    type="text" 
-                    name="name" 
-                    id="pdf-name" 
-                    value={pdfLeadData.name}
-                    onChange={handlePdfLeadChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
-                    required 
-                  />
-                </div>
-                
-                <div className="mb-6">
-                  <label htmlFor="pdf-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    id="pdf-email" 
-                    value={pdfLeadData.email}
-                    onChange={handlePdfLeadChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
-                    required 
-                  />
-                </div>
-                
-                <button 
-                  type="submit" 
-                  className="w-full bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
-                >
-                  Download Catalogue
-                </button>
-              </form>
-            ) : (
-              <div className="text-center">
-                <svg className="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <h4 className="text-lg font-medium text-gray-900 mb-2">Thank you!</h4>
-                <p className="text-gray-600 mb-4">Your download is ready.</p>
-                <a 
-                  href="https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign//Furnitures%20By%20Build%20&%20Design.pdf" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black"
-                >
-                  Download Now
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
