@@ -1,7 +1,5 @@
-// src/app/layout.tsx
 import './globals.css';
 import type { Metadata } from 'next';
-
 export const metadata: Metadata = {
   title: 'Build & Design by Gigimobile | Bulk Construction Materials – South Africa & Nigeria',
   description: 'Build & Design (by Gigimobile) is your bulk supplier of construction materials—lights, marbles, furnitures, steel & rebar, cement & aggregates, timber & lumber, windows & doors, plumbing & fixtures, electrical supplies, paint & finishes—serving developers and contractors across South Africa and Nigeria. Get a free quote today!',
@@ -24,7 +22,6 @@ export const metadata: Metadata = {
     ],
   },
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -33,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google tag (gtag.js) */}
+        {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-3TXZFT90D5"></script>
         <script
           dangerouslySetInnerHTML={{
@@ -95,3 +92,4 @@ export default function RootLayout({
     </html>
   );
 }
+    
