@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: 'Build & Design by Gigimobile',
     images: [
       {
-        url: 'https://buildanddesign.co.za/assets/og-image.jpg',
+        url: 'https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign//B%20&%20DFacebook%20Ad.png',
         width: 1200,
         height: 630,
         alt: 'Build & Design Construction Materials',
