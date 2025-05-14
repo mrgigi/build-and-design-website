@@ -518,7 +518,7 @@ export default function Home() {
             </div>
             
             {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xeogpane" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'lights')}>
+              <form action="https://formspree.io/f/xnndooby" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'lights')}>
                 <input type="hidden" name="catalogue" value="Lights Catalogue" />
                 
                 <div className="mb-4">
@@ -588,7 +588,7 @@ export default function Home() {
             </div>
             
             {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xeogpane" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'marbles')}>
+              <form action="https://formspree.io/f/xnndooby" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'marbles')}>
                 <input type="hidden" name="catalogue" value="Marbles Catalogue" />
                 
                 <div className="mb-4">
@@ -658,7 +658,7 @@ export default function Home() {
             </div>
             
             {!pdfFormSubmitted ? (
-              <form action="https://formspree.io/f/xeogpane" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'furnitures')}>
+              <form action="https://formspree.io/f/xnndooby" method="POST" onSubmit={(e) => handlePdfLeadSubmit(e, 'furnitures')}>
                 <input type="hidden" name="catalogue" value="Furnitures Catalogue" />
                 
                 <div className="mb-4">
