@@ -180,7 +180,7 @@ export default function Home() {
                 <h3 className="text-xl font-bold mb-2 text-black">Marbles</h3>
                 <p className="text-gray-600 mb-4">High-quality marble for elegant finishes</p>
                 <a 
-                  href="https://drive.google.com/file/d/1G2K44wY5VLM6vVPYXOord726phNqkSLZ/view?usp=sharing"
+                  href="https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign//Marbles%20by%20Build%20&%20Design-compressed%2031%20mb.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black inline-block"
