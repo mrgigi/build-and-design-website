@@ -141,6 +141,22 @@ export default function Home() {
             </div>
           </div>
         </section>
+        {/* Video Section - Overlapping between hero and products */}
+        <div className="container mx-auto px-4 relative z-30" style={{ marginTop: "-100px", marginBottom: "50px" }}>
+          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
+            <div style={{ position: "relative", overflow: "hidden", aspectRatio: "1920/1080" }}>
+              <iframe 
+                src="https://share.synthesia.io/embeds/videos/26e28f89-06eb-4dfc-a613-2dd94604ffc1" 
+                loading="lazy" 
+                title="Synthesia video player - Build & Design" 
+                allowFullScreen 
+                allow="encrypted-media; fullscreen;" 
+                style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0, border: "none", padding: 0, margin: 0, overflow: "hidden" }}
+              ></iframe>
+            </div>
+          </div>
+        </div>
+        
         <section id="products" className="container mx-auto py-20 px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-black">Product Categories</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -537,4 +553,3 @@ export default function Home() {
     </div>
   );
 }
- 
