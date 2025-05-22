@@ -141,8 +141,9 @@ export default function Home() {
             </div>
           </div>
         </section>
-        {/* Video Section - Overlapping between hero and products */}
-        <div className="container mx-auto px-4 relative z-30" style={{ marginTop: "-100px", marginBottom: "50px" }}>
+        
+        {/* Video Section - Adjusted for better mobile display */}
+        <div className="container mx-auto px-4 relative z-30 sm:mt-[-50px] mt-16 mb-16">
           <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
             <div style={{ position: "relative", overflow: "hidden", aspectRatio: "1920/1080" }}>
               <iframe 
