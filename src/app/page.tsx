@@ -142,8 +142,8 @@ export default function Home() {
           </div>
         </section>
         
-        {/* Video Section - Adjusted for better mobile display */}
-        <div className="container mx-auto px-4 relative z-30 sm:mt-[-50px] mt-16 mb-16">
+        {/* Video Section - Adjusted for better mobile display with reduced spacing */}
+        <div className="container mx-auto px-4 relative z-30 sm:mt-[-50px] mt-8 mb-8">
           <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-xl overflow-hidden">
             <div style={{ position: "relative", overflow: "hidden", aspectRatio: "1920/1080" }}>
               <iframe 
@@ -158,7 +158,7 @@ export default function Home() {
           </div>
         </div>
         
-        <section id="products" className="container mx-auto py-20 px-4">
+        <section id="products" className="container mx-auto py-12 px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-black">Product Categories</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-white rounded-lg shadow-md text-center hover:shadow-lg transition-shadow overflow-hidden">
