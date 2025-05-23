@@ -9,6 +9,7 @@ interface ContactFormData {
   productInterest: string[];
   otherProducts: string;
   estimatedQuantity: string;
+  hearAboutUs: string; // Added this field
 }
 export default function Home() {
   // Contact form state
@@ -20,6 +21,7 @@ export default function Home() {
     productInterest: [],
     otherProducts: '',
     estimatedQuantity: '',
+    hearAboutUs: '', // Added this field
   });
   
   // Mobile menu state
@@ -359,6 +361,18 @@ export default function Home() {
                   id="estimatedQuantity" 
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
                   placeholder="e.g., 500 units, 1000 sq meters, etc."
+                />
+              </div>
+              
+              {/* Changed "How did you hear about us?" field to text input */}
+              <div className="mt-6">
+                <label htmlFor="hearAboutUs" className="block text-sm font-medium text-gray-700 mb-1">How did you hear about us?</label>
+                <input 
+                  type="text" 
+                  name="hearAboutUs" 
+                  id="hearAboutUs" 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                  placeholder="Please let us know how you discovered us"
                 />
               </div>
               
