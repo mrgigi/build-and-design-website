@@ -1,4 +1,3 @@
-
 'use client';
 import { useState } from 'react';
 interface ContactFormData {
@@ -43,6 +42,25 @@ export default function Home() {
       setFormData({ ...formData, productInterest: options });
     } else {
       setFormData({ ...formData, [name]: value });
+    }
+  };
+  
+  // Handle checkbox changes for product interest
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    
+    if (checked) {
+      // Add the value to the array if checked
+      setFormData({
+        ...formData,
+        productInterest: [...formData.productInterest, value]
+      });
+    } else {
+      // Remove the value from the array if unchecked
+      setFormData({
+        ...formData,
+        productInterest: formData.productInterest.filter(item => item !== value)
+      });
     }
   };
   
@@ -320,26 +338,121 @@ export default function Home() {
                 </div>
               </div>
               
+              {/* Changed from multi-select to checkboxes */}
               <div className="mt-6">
-                <label htmlFor="productInterest" className="block text-sm font-medium text-gray-700 mb-1">Product Interest (Select multiple)</label>
-                <select 
-                  name="productInterest" 
-                  id="productInterest" 
-                  multiple 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 h-32"
-                >
-                  <option value="Lights">Lights</option>
-                  <option value="Marbles">Marbles</option>
-                  <option value="Furnitures">Furnitures</option>
-                  <option value="Steel & Rebar">Steel & Rebar</option>
-                  <option value="Cement & Aggregates">Cement & Aggregates</option>
-                  <option value="Timber & Lumber">Timber & Lumber</option>
-                  <option value="Windows & Doors">Windows & Doors</option>
-                  <option value="Plumbing & Fixtures">Plumbing & Fixtures</option>
-                  <option value="Electrical Supplies">Electrical Supplies</option>
-                  <option value="Paint & Finishes">Paint & Finishes</option>
-                </select>
-                <p className="text-sm text-gray-500 mt-1">Hold Ctrl (or Cmd on Mac) to select multiple options</p>
+                <label className="block text-sm font-medium text-gray-700 mb-3">Product Interest (Select all that apply)</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-lights" 
+                      value="Lights"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-lights" className="ml-2 block text-sm text-gray-700">Lights</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-marbles" 
+                      value="Marbles"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-marbles" className="ml-2 block text-sm text-gray-700">Marbles</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-furnitures" 
+                      value="Furnitures"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-furnitures" className="ml-2 block text-sm text-gray-700">Furnitures</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-steel" 
+                      value="Steel & Rebar"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-steel" className="ml-2 block text-sm text-gray-700">Steel & Rebar</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-cement" 
+                      value="Cement & Aggregates"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-cement" className="ml-2 block text-sm text-gray-700">Cement & Aggregates</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-timber" 
+                      value="Timber & Lumber"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-timber" className="ml-2 block text-sm text-gray-700">Timber & Lumber</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-windows" 
+                      value="Windows & Doors"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-windows" className="ml-2 block text-sm text-gray-700">Windows & Doors</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-plumbing" 
+                      value="Plumbing & Fixtures"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-plumbing" className="ml-2 block text-sm text-gray-700">Plumbing & Fixtures</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-electrical" 
+                      value="Electrical Supplies"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-electrical" className="ml-2 block text-sm text-gray-700">Electrical Supplies</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="productInterest[]" 
+                      id="product-paint" 
+                      value="Paint & Finishes"
+                      className="h-4 w-4 text-black focus:ring-gray-500 border-gray-300 rounded"
+                      onChange={handleCheckboxChange}
+                    />
+                    <label htmlFor="product-paint" className="ml-2 block text-sm text-gray-700">Paint & Finishes</label>
+                  </div>
+                </div>
               </div>
               
               <div className="mt-6">
@@ -364,9 +477,9 @@ export default function Home() {
                 />
               </div>
               
-              {/* Changed "How did you hear about us?" field to text input */}
+              {/* Changed "How did you hear about us?" field to optional */}
               <div className="mt-6">
-                <label htmlFor="hearAboutUs" className="block text-sm font-medium text-gray-700 mb-1">How did you hear about us?</label>
+                <label htmlFor="hearAboutUs" className="block text-sm font-medium text-gray-700 mb-1">How did you hear about us? (optional)</label>
                 <input 
                   type="text" 
                   name="hearAboutUs" 
