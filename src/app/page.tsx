@@ -12,12 +12,7 @@ interface ContactFormData {
   estimatedQuantity: string;
   hearAboutUs: string; // Added this field
 }
-// Add this to make TypeScript recognize the Cloudinary widget
-declare global {
-  interface Window {
-    cld_gallery_widget: any;
-  }
-}
+
 export default function Home() {
   // Contact form state
   const [formData, setFormData] = useState<ContactFormData>({
@@ -74,8 +69,11 @@ export default function Home() {
   
   // Initialize Cloudinary Gallery Widget
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return;
+    
     // Load the Cloudinary Gallery Widget script
-    const loadCloudinaryScript = () => {
+    const loadScript = () => {
       return new Promise<void>((resolve, reject) => {
         if (document.getElementById('cloudinary-gallery-script')) {
           resolve();
@@ -87,18 +85,20 @@ export default function Home() {
         script.src = 'https://unpkg.com/@cloudinary/gallery-widget@1.0.3/dist/cld-gallery.min.js';
         script.async = true;
         script.onload = () => resolve();
-        script.onerror = (error) => reject(error);
+        script.onerror = () => reject(new Error('Failed to load Cloudinary script'));
         document.body.appendChild(script);
       });
     };
     
     // Initialize the gallery after the script is loaded
     const initializeGallery = () => {
-      if (typeof window !== 'undefined' && 
-          window.cld_gallery_widget && 
-          document.getElementById('cld-gallery')) {
-        
-        try {
+      try {
+        if (window && 
+            // @ts-ignore - Cloudinary widget is loaded dynamically
+            window.cld_gallery_widget && 
+            document.getElementById('cld-gallery')) {
+          
+          // @ts-ignore - Cloudinary widget is loaded dynamically
           window.cld_gallery_widget.create({
             container: '#cld-gallery',
             cloudName: 'dfdns7mrw',
@@ -124,18 +124,18 @@ export default function Home() {
             }
           }).render();
           console.log('Cloudinary Gallery Widget initialized successfully');
-        } catch (error) {
-          console.error('Error initializing Cloudinary Gallery Widget:', error);
+        } else {
+          console.warn('Cloudinary Gallery Widget not available or container not found');
         }
-      } else {
-        console.warn('Cloudinary Gallery Widget not available or container not found');
+      } catch (error) {
+        console.error('Error initializing Cloudinary Gallery Widget:', error);
       }
     };
     
     // Load script and initialize gallery
     const setupGallery = async () => {
       try {
-        await loadCloudinaryScript();
+        await loadScript();
         // Add a small delay to ensure the script is fully loaded
         setTimeout(initializeGallery, 500);
       } catch (error) {
@@ -817,3 +817,4 @@ export default function Home() {
     </div>
   );
 }
+ 
