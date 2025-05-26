@@ -84,52 +84,79 @@ export default function Home() {
         setLoading(true);
         setError(null);
         
-        // Direct fetch to the public URL to list all files in the Gallery folder
-        const response = await fetch('https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign/Gallery/', {
-          method: 'GET',
+        // Use the proxy endpoint to fetch the gallery images
+        const response = await fetch('/api/proxy', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            protocol: 'https',
+            origin: 'oprjperexnkidjndkjpx.supabase.co',
+            path: '/storage/v1/object/list/buildanddesign/Gallery',
+            method: 'GET',
+          }),
         });
         
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('Error fetching gallery:', errorText);
+          console.error('Error response:', errorText);
           throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`);
         }
         
-        // Get the HTML content of the directory listing
-        const htmlContent = await response.text();
-        console.log('Response content:', htmlContent);
+        const data = await response.json();
+        console.log('API Response:', data);
         
-        // Parse the HTML to extract file paths
-        // This is a simple approach - in a production environment, you'd use a proper API
-        const fileRegex = /href="([^"]+\.(jpg|jpeg|png|gif|webp))"/gi;
-        const matches = [...htmlContent.matchAll(fileRegex)];
-        
-        if (matches.length === 0) {
-          console.log('No image files found in the response');
-          setImages([]);
-          setCategories([]);
-          setLoading(false);
-          return;
+        if (!data || !Array.isArray(data)) {
+          console.error('Invalid response format:', data);
+          throw new Error('Invalid response format from API');
         }
         
+        // Process the data to extract images and categories
         const processedImages: GalleryImage[] = [];
         const categorySet = new Set<string>();
         
-        matches.forEach(match => {
-          const filePath = match[1];
-          // Extract category from path - assuming format like "/category/filename.jpg"
-          const pathParts = filePath.split('/').filter(part => part.length > 0);
+        // Map of predefined categories to ensure consistent naming
+        const categoryMapping: {[key: string]: string} = {
+          'furnitures': 'Furnitures',
+          'lights': 'Lights',
+          'marble tables': 'Marble Tables',
+          'marble tabletops': 'Marble Tables',
+          'marble tiles': 'Marble Tiles'
+        };
+        
+        data.forEach((item: any) => {
+          if (!item || !item.name) return;
           
-          if (pathParts.length >= 1) {
+          // Skip non-image files
+          const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(item.name);
+          if (!isImage) return;
+          
+          // Extract the category from the path
+          const pathParts = item.name.split('/');
+          
+          if (pathParts.length >= 2) {
             // The first part after Gallery/ is the category
-            const category = pathParts[0].toLowerCase();
-            const url = `https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign/Gallery/${filePath}`;
+            let category = pathParts[0].toLowerCase();
+            
+            // Use the mapped category name if available
+            const mappedCategory = Object.keys(categoryMapping).find(key => 
+              category.includes(key)
+            );
+            
+            if (mappedCategory) {
+              category = categoryMapping[mappedCategory];
+            } else {
+              // Capitalize the first letter of each word
+              category = category.split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+            }
+            
+            const url = `https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign/${item.name}`;
             
             processedImages.push({
-              name: filePath,
+              name: item.name,
               url: url,
               category: category
             });
@@ -402,7 +429,7 @@ export default function Home() {
                       : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
                   }`}
                 >
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                  {category}
                 </button>
               ))}
             </div>
@@ -435,7 +462,7 @@ export default function Home() {
                       />
                     </div>
                     <div className="p-3">
-                      <p className="text-sm text-gray-600 capitalize">{image.category}</p>
+                      <p className="text-sm text-gray-600">{image.category}</p>
                     </div>
                   </div>
                 ))}
@@ -885,3 +912,4 @@ export default function Home() {
     </div>
   );
 }
+   
