@@ -82,59 +82,71 @@ export default function Home() {
     const fetchImages = async () => {
       try {
         setLoading(true);
-        // Using the proxy endpoint to avoid CORS issues
-        const response = await fetch('/api/proxy', {
-          method: 'POST',
+        setError(null);
+        
+        // Direct fetch to the public URL to list all files in the Gallery folder
+        const response = await fetch('https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign/Gallery/', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            protocol: 'https',
-            origin: 'oprjperexnkidjndkjpx.supabase.co',
-            path: '/storage/v1/object/list/buildanddesign/Gallery',
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }),
         });
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch images');
+          const errorText = await response.text();
+          console.error('Error fetching gallery:', errorText);
+          throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`);
         }
         
-        const data = await response.json();
+        // Get the HTML content of the directory listing
+        const htmlContent = await response.text();
+        console.log('Response content:', htmlContent);
         
-        // Process the data to extract images and categories
+        // Parse the HTML to extract file paths
+        // This is a simple approach - in a production environment, you'd use a proper API
+        const fileRegex = /href="([^"]+\.(jpg|jpeg|png|gif|webp))"/gi;
+        const matches = [...htmlContent.matchAll(fileRegex)];
+        
+        if (matches.length === 0) {
+          console.log('No image files found in the response');
+          setImages([]);
+          setCategories([]);
+          setLoading(false);
+          return;
+        }
+        
         const processedImages: GalleryImage[] = [];
         const categorySet = new Set<string>();
         
-        if (data && Array.isArray(data)) {
-          data.forEach((item: any) => {
-            // Extract the category from the path
-            // The path format is expected to be like "Gallery/category/filename.jpg"
-            const pathParts = item.name.split('/');
+        matches.forEach(match => {
+          const filePath = match[1];
+          // Extract category from path - assuming format like "/category/filename.jpg"
+          const pathParts = filePath.split('/').filter(part => part.length > 0);
+          
+          if (pathParts.length >= 1) {
+            // The first part after Gallery/ is the category
+            const category = pathParts[0].toLowerCase();
+            const url = `https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign/Gallery/${filePath}`;
             
-            if (pathParts.length >= 2) {
-              const category = pathParts[1].toLowerCase();
-              const url = `https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign/${item.name}`;
-              
-              processedImages.push({
-                name: item.name,
-                url: url,
-                category: category
-              });
-              
-              categorySet.add(category);
-            }
-          });
-        }
+            processedImages.push({
+              name: filePath,
+              url: url,
+              category: category
+            });
+            
+            categorySet.add(category);
+          }
+        });
+        
+        console.log('Processed images:', processedImages);
+        console.log('Categories:', Array.from(categorySet));
         
         setImages(processedImages);
         setCategories(Array.from(categorySet));
         setLoading(false);
       } catch (err) {
         console.error('Error fetching images:', err);
-        setError('Failed to load images. Please try again later.');
+        setError('Failed to load images. Please try again later. ' + (err instanceof Error ? err.message : ''));
         setLoading(false);
       }
     };
@@ -873,4 +885,3 @@ export default function Home() {
     </div>
   );
 }
-  
