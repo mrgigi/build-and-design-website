@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 interface ContactFormData {
   name: string;
   company: string;
@@ -9,6 +10,11 @@ interface ContactFormData {
   otherProducts: string;
   estimatedQuantity: string;
   hearAboutUs: string; // Added this field
+}
+interface GalleryImage {
+  name: string;
+  url: string;
+  category: string;
 }
 export default function Home() {
   // Contact form state
@@ -22,6 +28,13 @@ export default function Home() {
     estimatedQuantity: '',
     hearAboutUs: '', // Added this field
   });
+  
+  // Gallery state
+  const [images, setImages] = useState<GalleryImage[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   
   // Mobile menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -64,6 +77,75 @@ export default function Home() {
     }
   };
   
+  // Fetch gallery images
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        setLoading(true);
+        // Using the proxy endpoint to avoid CORS issues
+        const response = await fetch('/api/proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            protocol: 'https',
+            origin: 'oprjperexnkidjndkjpx.supabase.co',
+            path: '/storage/v1/object/list/buildanddesign/Gallery',
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch images');
+        }
+        
+        const data = await response.json();
+        
+        // Process the data to extract images and categories
+        const processedImages: GalleryImage[] = [];
+        const categorySet = new Set<string>();
+        
+        if (data && Array.isArray(data)) {
+          data.forEach((item: any) => {
+            // Extract the category from the path
+            // The path format is expected to be like "Gallery/category/filename.jpg"
+            const pathParts = item.name.split('/');
+            
+            if (pathParts.length >= 2) {
+              const category = pathParts[1].toLowerCase();
+              const url = `https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign/${item.name}`;
+              
+              processedImages.push({
+                name: item.name,
+                url: url,
+                category: category
+              });
+              
+              categorySet.add(category);
+            }
+          });
+        }
+        
+        setImages(processedImages);
+        setCategories(Array.from(categorySet));
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching images:', err);
+        setError('Failed to load images. Please try again later.');
+        setLoading(false);
+      }
+    };
+    
+    fetchImages();
+  }, []);
+  
+  const filteredImages = selectedCategory === 'all' 
+    ? images 
+    : images.filter(image => image.category === selectedCategory);
+  
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed header with higher z-index */}
@@ -80,6 +162,7 @@ export default function Home() {
           <nav className="hidden md:flex space-x-4">
             <a href="#home" className="text-black hover:text-gray-600 transition-colors">Home</a>
             <a href="#products" className="text-black hover:text-gray-600 transition-colors">Products</a>
+            <a href="#gallery" className="text-black hover:text-gray-600 transition-colors">Gallery</a>
             <a href="#about" className="text-black hover:text-gray-600 transition-colors">About Us</a>
             <a href="#contact" className="text-black hover:text-gray-600 transition-colors">Contact</a>
             <a href="#contact" className="bg-black text-white px-3 py-1 rounded hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black">Get a Free Quote</a>
@@ -113,6 +196,13 @@ export default function Home() {
                   onClick={closeMobileMenu}
                 >
                   Products
+                </a>
+                <a 
+                  href="#gallery" 
+                  className="text-black hover:text-gray-600 transition-colors py-2 border-b border-gray-100"
+                  onClick={closeMobileMenu}
+                >
+                  Gallery
                 </a>
                 <a 
                   href="#about" 
@@ -156,7 +246,7 @@ export default function Home() {
               <p className="text-lg md:text-xl mb-8 text-white">Lights, Marbles & Furnitures—wholesale delivery nationwide</p>
               <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
                 <a href="#contact" className="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black">Get a Free Quote</a>
-                <a href="https://forms.gle/BLWs79ZZtfFTaCaG8" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors shadow-md">Make a Custom Request</a>
+                <a href="#gallery" className="bg-white text-black px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors shadow-md">Enter Gallery</a>
               </div>
             </div>
           </div>
@@ -258,12 +348,98 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-xl font-bold mb-2 text-black">Others (Coming Soon)</h3>
                 <p className="text-gray-600 mb-4">More construction materials coming soon</p>
-                <a href="https://forms.gle/BLWs79ZZtfFTaCaG8" target="_blank" rel="noopener noreferrer" className="bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black inline-block">Make a Custom Request</a>
+                <a 
+                  href="https://forms.gle/BLWs79ZZtfFTaCaG8" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="bg-black text-white px-4 py-2 rounded-md font-medium hover:bg-gray-800 transition-colors shadow-md bg-gradient-to-b from-gray-700 to-black inline-block"
+                >
+                  Make a Custom Request
+                </a>
               </div>
             </div>
           </div>
+          
+          {/* Removed the "View Our Product Gallery" button */}
         </section>
-        <section id="about" className="bg-gray-50 py-20">
+        {/* Gallery Section */}
+        <section id="gallery" className="bg-gray-50 py-16 px-4">
+          <div className="container mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-8 text-black">Product Gallery</h2>
+            
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              <button
+                onClick={() => setSelectedCategory('all')}
+                className={`px-4 py-2 rounded-full transition-colors ${
+                  selectedCategory === 'all'
+                    ? 'bg-black text-white shadow-md bg-gradient-to-b from-gray-700 to-black'
+                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                }`}
+              >
+                All
+              </button>
+              
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full transition-colors ${
+                    selectedCategory === category
+                      ? 'bg-black text-white shadow-md bg-gradient-to-b from-gray-700 to-black'
+                      : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                  }`}
+                >
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </button>
+              ))}
+            </div>
+            
+            {/* Loading State */}
+            {loading && (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+              </div>
+            )}
+            
+            {/* Error State */}
+            {error && (
+              <div className="text-center text-red-600 p-4 bg-red-100 rounded-lg">
+                {error}
+              </div>
+            )}
+            
+            {/* Image Grid */}
+            {!loading && !error && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {filteredImages.map((image, index) => (
+                  <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="relative pb-[100%]">
+                      <img
+                        src={image.url}
+                        alt={`${image.category} - ${index + 1}`}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="p-3">
+                      <p className="text-sm text-gray-600 capitalize">{image.category}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* No Results */}
+            {!loading && !error && filteredImages.length === 0 && (
+              <div className="text-center text-gray-600 p-8">
+                No images found for this category.
+              </div>
+            )}
+          </div>
+        </section>
+        
+        <section id="about" className="bg-white py-20">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold mb-8 text-black">About Us</h2>
             <div className="max-w-3xl mx-auto">
@@ -560,6 +736,14 @@ export default function Home() {
                   </a>
                 </li>
                 <li>
+                  <a href="#gallery" className="flex items-center hover:text-gray-300 transition-colors">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Gallery
+                  </a>
+                </li>
+                <li>
                   <a href="#about" className="flex items-center hover:text-gray-300 transition-colors">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -573,6 +757,14 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
                     Contact
+                  </a>
+                </li>
+                <li>
+                  <a href="https://forms.gle/BLWs79ZZtfFTaCaG8" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-gray-300 transition-colors">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Make a Custom Request
                   </a>
                 </li>
               </ul>
@@ -681,3 +873,4 @@ export default function Home() {
     </div>
   );
 }
+  
