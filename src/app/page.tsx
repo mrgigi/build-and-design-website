@@ -11,11 +11,7 @@ interface ContactFormData {
   estimatedQuantity: string;
   hearAboutUs: string; // Added this field
 }
-interface GalleryImage {
-  name: string;
-  url: string;
-  category: string;
-}
+
 export default function Home() {
   // Contact form state
   const [formData, setFormData] = useState<ContactFormData>({
@@ -28,13 +24,6 @@ export default function Home() {
     estimatedQuantity: '',
     hearAboutUs: '', // Added this field
   });
-  
-  // Gallery state
-  const [images, setImages] = useState<GalleryImage[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   
   // Mobile menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -77,113 +66,56 @@ export default function Home() {
     }
   };
   
-  // Fetch gallery images
+  // Initialize Cloudinary Gallery Widget
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Use the proxy endpoint to fetch the gallery images
-        const response = await fetch('/api/proxy', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            protocol: 'https',
-            origin: 'oprjperexnkidjndkjpx.supabase.co',
-            path: '/storage/v1/object/list/buildanddesign/Gallery',
-            method: 'GET',
-          }),
-        });
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Error response:', errorText);
-          throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        console.log('API Response:', data);
-        
-        if (!data || !Array.isArray(data)) {
-          console.error('Invalid response format:', data);
-          throw new Error('Invalid response format from API');
-        }
-        
-        // Process the data to extract images and categories
-        const processedImages: GalleryImage[] = [];
-        const categorySet = new Set<string>();
-        
-        // Map of predefined categories to ensure consistent naming
-        const categoryMapping: {[key: string]: string} = {
-          'furnitures': 'Furnitures',
-          'lights': 'Lights',
-          'marble tables': 'Marble Tables',
-          'marble tabletops': 'Marble Tables',
-          'marble tiles': 'Marble Tiles'
-        };
-        
-        data.forEach((item: any) => {
-          if (!item || !item.name) return;
-          
-          // Skip non-image files
-          const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(item.name);
-          if (!isImage) return;
-          
-          // Extract the category from the path
-          const pathParts = item.name.split('/');
-          
-          if (pathParts.length >= 2) {
-            // The first part after Gallery/ is the category
-            let category = pathParts[0].toLowerCase();
-            
-            // Use the mapped category name if available
-            const mappedCategory = Object.keys(categoryMapping).find(key => 
-              category.includes(key)
-            );
-            
-            if (mappedCategory) {
-              category = categoryMapping[mappedCategory];
-            } else {
-              // Capitalize the first letter of each word
-              category = category.split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ');
-            }
-            
-            const url = `https://oprjperexnkidjndkjpx.supabase.co/storage/v1/object/public/buildanddesign/${item.name}`;
-            
-            processedImages.push({
-              name: item.name,
-              url: url,
-              category: category
-            });
-            
-            categorySet.add(category);
-          }
-        });
-        
-        console.log('Processed images:', processedImages);
-        console.log('Categories:', Array.from(categorySet));
-        
-        setImages(processedImages);
-        setCategories(Array.from(categorySet));
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching images:', err);
-        setError('Failed to load images. Please try again later. ' + (err instanceof Error ? err.message : ''));
-        setLoading(false);
+    // Check if the script is already loaded
+    if (!document.getElementById('cloudinary-gallery-script')) {
+      const script = document.createElement('script');
+      script.id = 'cloudinary-gallery-script';
+      script.src = 'https://unpkg.com/@cloudinary/gallery-widget@1.0.3/dist/cld-gallery.min.js';
+      script.async = true;
+      script.onload = initializeGallery;
+      document.body.appendChild(script);
+    } else {
+      // If script is already loaded, initialize the gallery
+      initializeGallery();
+    }
+
+    return () => {
+      // Cleanup if needed
+      const script = document.getElementById('cloudinary-gallery-script');
+      if (script) {
+        // Don't remove the script as it might be used by other components
       }
     };
-    
-    fetchImages();
   }, []);
-  
-  const filteredImages = selectedCategory === 'all' 
-    ? images 
-    : images.filter(image => image.category === selectedCategory);
+
+  const initializeGallery = () => {
+    // Check if the cld_gallery_widget is available and the container exists
+    if (typeof window !== 'undefined' && 
+        window.cld_gallery_widget && 
+        document.getElementById('cld-gallery')) {
+      
+      window.cld_gallery_widget.create({
+        container: '#cld-gallery',
+        cloudName: 'dfdns7mrw',
+        mediaAssets: {
+          prefix: 'Gallery/Furnitures/',
+          resourceType: 'image',
+          maxResults: 200,
+          delivery: { transformation: [{ width: 300, crop: 'scale' }] }
+        },
+        ui: {
+          styles: {
+            thumbnails: { height: '180px', margin: '8px' }
+          },
+          filters: {
+            show: true,
+          }
+        }
+      }).render();
+    }
+  };
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -401,80 +333,14 @@ export default function Home() {
           
           {/* Removed the "View Our Product Gallery" button */}
         </section>
-        {/* Gallery Section */}
+        
+        {/* Gallery Section with Cloudinary Gallery Widget */}
         <section id="gallery" className="bg-gray-50 py-16 px-4">
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold text-center mb-8 text-black">Product Gallery</h2>
             
-            {/* Filter Buttons */}
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              <button
-                onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-full transition-colors ${
-                  selectedCategory === 'all'
-                    ? 'bg-black text-white shadow-md bg-gradient-to-b from-gray-700 to-black'
-                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
-              >
-                All
-              </button>
-              
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full transition-colors ${
-                    selectedCategory === category
-                      ? 'bg-black text-white shadow-md bg-gradient-to-b from-gray-700 to-black'
-                      : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-            
-            {/* Loading State */}
-            {loading && (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
-              </div>
-            )}
-            
-            {/* Error State */}
-            {error && (
-              <div className="text-center text-red-600 p-4 bg-red-100 rounded-lg">
-                {error}
-              </div>
-            )}
-            
-            {/* Image Grid */}
-            {!loading && !error && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {filteredImages.map((image, index) => (
-                  <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="relative pb-[100%]">
-                      <img
-                        src={image.url}
-                        alt={`${image.category} - ${index + 1}`}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="p-3">
-                      <p className="text-sm text-gray-600">{image.category}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            {/* No Results */}
-            {!loading && !error && filteredImages.length === 0 && (
-              <div className="text-center text-gray-600 p-8">
-                No images found for this category.
-              </div>
-            )}
+            {/* Cloudinary Gallery Widget Container */}
+            <div id="cld-gallery" className="w-full min-h-[500px]"></div>
           </div>
         </section>
         
@@ -912,4 +778,4 @@ export default function Home() {
     </div>
   );
 }
-   
+  
