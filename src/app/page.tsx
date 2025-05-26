@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -11,7 +12,12 @@ interface ContactFormData {
   estimatedQuantity: string;
   hearAboutUs: string; // Added this field
 }
-
+// Add this to make TypeScript recognize the Cloudinary widget
+declare global {
+  interface Window {
+    cld_gallery_widget: any;
+  }
+}
 export default function Home() {
   // Contact form state
   const [formData, setFormData] = useState<ContactFormData>({
@@ -68,54 +74,82 @@ export default function Home() {
   
   // Initialize Cloudinary Gallery Widget
   useEffect(() => {
-    // Check if the script is already loaded
-    if (!document.getElementById('cloudinary-gallery-script')) {
-      const script = document.createElement('script');
-      script.id = 'cloudinary-gallery-script';
-      script.src = 'https://unpkg.com/@cloudinary/gallery-widget@1.0.3/dist/cld-gallery.min.js';
-      script.async = true;
-      script.onload = initializeGallery;
-      document.body.appendChild(script);
-    } else {
-      // If script is already loaded, initialize the gallery
-      initializeGallery();
-    }
-
-    return () => {
-      // Cleanup if needed
-      const script = document.getElementById('cloudinary-gallery-script');
-      if (script) {
-        // Don't remove the script as it might be used by other components
+    // Load the Cloudinary Gallery Widget script
+    const loadCloudinaryScript = () => {
+      return new Promise<void>((resolve, reject) => {
+        if (document.getElementById('cloudinary-gallery-script')) {
+          resolve();
+          return;
+        }
+        
+        const script = document.createElement('script');
+        script.id = 'cloudinary-gallery-script';
+        script.src = 'https://unpkg.com/@cloudinary/gallery-widget@1.0.3/dist/cld-gallery.min.js';
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = (error) => reject(error);
+        document.body.appendChild(script);
+      });
+    };
+    
+    // Initialize the gallery after the script is loaded
+    const initializeGallery = () => {
+      if (typeof window !== 'undefined' && 
+          window.cld_gallery_widget && 
+          document.getElementById('cld-gallery')) {
+        
+        try {
+          window.cld_gallery_widget.create({
+            container: '#cld-gallery',
+            cloudName: 'dfdns7mrw',
+            mediaAssets: {
+              prefix: 'Gallery/',  // Show all gallery images
+              resourceType: 'image',
+              maxResults: 200,
+              delivery: { transformation: [{ width: 300, crop: 'scale' }] }
+            },
+            ui: {
+              styles: {
+                thumbnails: { height: '180px', margin: '8px' }
+              },
+              filters: {
+                show: true,
+                options: [
+                  { name: 'Furnitures', prefix: 'Gallery/Furnitures/' },
+                  { name: 'Lights', prefix: 'Gallery/Lights/' },
+                  { name: 'Marble Tables', prefix: 'Gallery/Marble Tables/' },
+                  { name: 'Marble Tiles', prefix: 'Gallery/Marble Tiles/' }
+                ]
+              }
+            }
+          }).render();
+          console.log('Cloudinary Gallery Widget initialized successfully');
+        } catch (error) {
+          console.error('Error initializing Cloudinary Gallery Widget:', error);
+        }
+      } else {
+        console.warn('Cloudinary Gallery Widget not available or container not found');
       }
     };
+    
+    // Load script and initialize gallery
+    const setupGallery = async () => {
+      try {
+        await loadCloudinaryScript();
+        // Add a small delay to ensure the script is fully loaded
+        setTimeout(initializeGallery, 500);
+      } catch (error) {
+        console.error('Failed to load Cloudinary Gallery Widget script:', error);
+      }
+    };
+    
+    setupGallery();
+    
+    // Cleanup function
+    return () => {
+      // No need to remove the script as it might be used by other components
+    };
   }, []);
-
-  const initializeGallery = () => {
-    // Check if the cld_gallery_widget is available and the container exists
-    if (typeof window !== 'undefined' && 
-        window.cld_gallery_widget && 
-        document.getElementById('cld-gallery')) {
-      
-      window.cld_gallery_widget.create({
-        container: '#cld-gallery',
-        cloudName: 'dfdns7mrw',
-        mediaAssets: {
-          prefix: 'Gallery/Furnitures/',
-          resourceType: 'image',
-          maxResults: 200,
-          delivery: { transformation: [{ width: 300, crop: 'scale' }] }
-        },
-        ui: {
-          styles: {
-            thumbnails: { height: '180px', margin: '8px' }
-          },
-          filters: {
-            show: true,
-          }
-        }
-      }).render();
-    }
-  };
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -340,7 +374,12 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-center mb-8 text-black">Product Gallery</h2>
             
             {/* Cloudinary Gallery Widget Container */}
-            <div id="cld-gallery" className="w-full min-h-[500px]"></div>
+            <div id="cld-gallery" className="w-full min-h-[500px] flex justify-center items-center">
+              <div className="text-center p-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading gallery...</p>
+              </div>
+            </div>
           </div>
         </section>
         
@@ -778,4 +817,3 @@ export default function Home() {
     </div>
   );
 }
-  
